@@ -3,7 +3,7 @@
 
 ## Todo
 
-Litherium 
+Ethereum 
 
 Bitcoin
 
