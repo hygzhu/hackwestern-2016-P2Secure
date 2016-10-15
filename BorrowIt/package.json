@@ -11,7 +11,10 @@
     "debug": "~2.2.0",
     "express": "~4.13.4",
     "jade": "~1.11.0",
+    "lodash": "^4.16.4",
+    "mongoose": "^4.6.3",
     "morgan": "~1.7.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "truffle": "~2.1.0"
   }
 }
