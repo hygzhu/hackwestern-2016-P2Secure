@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as EventEmitter from 'events';
-import { UserModel } from '../models/user.server.model.ts';
-import { UserRepository} from '../repositories/user.repository.ts'
+import { UserModel } from '../models/user.server.model';
+import { UserRepository} from '../repositories/user.repository'
 
 
 export class UserController {

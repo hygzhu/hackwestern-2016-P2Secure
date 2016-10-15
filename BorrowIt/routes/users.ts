@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-import { UserController } from '../controllers/users.server.controller.ts'
+import { UserController } from '../controllers/users.server.controller'
 
 var userController: UserController = new UserController();
 

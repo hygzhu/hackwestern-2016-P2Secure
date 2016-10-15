@@ -23,8 +23,10 @@ export class UserRepository {
 mongoose : Mongoose.Mongoose;
 
 constructor(){
-    //var mongoose = require('mongoose').; 
-    this.mongoose.connect('mongodb://localhost/cats'); 
+    //var mongoose = require('mongoose').;
+
+    this.mongoose = new Mongoose.Mongoose(); 
+    this.mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
 }
 
 
@@ -42,7 +44,7 @@ createNewUser(user: UserModel): string {
         phone: user.phone
     });  
 
-
+    //entry.sa
     entry.save(function(err){
         if(err){
             return "Sorry, there was an error saving the stand-up meeting note. " + err;

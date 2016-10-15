@@ -1,4 +1,5 @@
 "use strict";
+var Mongoose = require('mongoose');
 var User = require('../models/user.database.model.js');
 /*
 set( ) 	Write or replace data to a defined path, like messages/users/<username>
@@ -10,8 +11,9 @@ transaction( ) 	Use our transactions feature when working with complex data that
 */
 var UserRepository = (function () {
     function UserRepository() {
-        //var mongoose = require('mongoose').; 
-        this.mongoose.connect('mongodb://localhost/cats');
+        //var mongoose = require('mongoose').;
+        this.mongoose = new Mongoose.Mongoose();
+        this.mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit');
     }
     UserRepository.prototype.createNewUser = function (user) {
         //We will obtain the form data from the request argument that is passed into our function
@@ -25,6 +27,7 @@ var UserRepository = (function () {
             email: user.email,
             phone: user.phone
         });
+        //entry.sa
         entry.save(function (err) {
             if (err) {
                 return "Sorry, there was an error saving the stand-up meeting note. " + err;

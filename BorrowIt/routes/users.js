@@ -1,8 +1,8 @@
 "use strict";
 var express = require('express');
 var router = express.Router();
-var users_server_controller_ts_1 = require('../controllers/users.server.controller.ts');
-var userController = new users_server_controller_ts_1.UserController();
+var users_server_controller_1 = require('../controllers/users.server.controller');
+var userController = new users_server_controller_1.UserController();
 /* GET users listing. */
 router.get('/', function (req, res, next) {
     res.send('respond with a resource');
