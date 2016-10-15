@@ -1,6 +1,7 @@
 "use strict";
-var Mongoose = require('mongoose');
-var User = require('../models/user.database.model.js');
+var mongoose = require('mongoose');
+var User = require('../models/user.database.model');
+//mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
 /*
 set( ) 	Write or replace data to a defined path, like messages/users/<username>
 update( ) 	Update some of the keys for a defined path without replacing all of the data
@@ -10,10 +11,10 @@ transaction( ) 	Use our transactions feature when working with complex data that
                 could be corrupted by concurrent updates
 */
 var UserRepository = (function () {
+    //mongoose : Mongoose.Mongoose ;
     function UserRepository() {
         //var mongoose = require('mongoose').;
-        this.mongoose = new Mongoose.Mongoose();
-        this.mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit');
+        // this.mongoose = new Mongoose.Mongoose(); 
     }
     UserRepository.prototype.createNewUser = function (user) {
         //We will obtain the form data from the request argument that is passed into our function

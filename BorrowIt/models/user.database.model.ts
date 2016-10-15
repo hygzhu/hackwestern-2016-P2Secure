@@ -1,13 +1,14 @@
 import {Mongoose} from 'mongoose';
 
 var mongoose: Mongoose = require('mongoose');
+//mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
 var Schema = mongoose.Schema;
 
 //Custom Validators: 
 
 var memberNameValidator = [
     function(val: string) {
-        return (val.length > 0 && val.toLocaleLowerCase() != 'none')
+        return (val.length > 0 && val.toLocaleLowerCase() != 'none');
     },
     //Custom error text...
     'Select a valid user name.' ];
@@ -15,7 +16,7 @@ var memberNameValidator = [
 var requiredStringValidator = [
     function(val){
         var testVal = val.trim();
-        return (testVal.length > 0)
+        return (testVal.length > 0);
     }, 
     //Custom error text...
     '{Path} cannot be empty'

@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var app = express();
+var mongoose = require("mongoose");
+mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit');
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

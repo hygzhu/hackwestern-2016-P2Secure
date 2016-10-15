@@ -1,13 +1,13 @@
 import * as Mongoose from 'mongoose';
 import * as express from 'express';
 import * as EventEmitter from 'events';
-import { UserModel } from '../models/user.server.model.ts';
+import { UserModel } from '../models/user.server.model';
 
 
+var mongoose = require('mongoose');
+var User: Mongoose._mongoose.IModelConstructor<{}> & EventEmitter.EventEmitter = require('../models/user.database.model');
 
-var User: Mongoose._mongoose.IModelConstructor<{}> & EventEmitter.EventEmitter = require('../models/user.database.model.js');
-
-
+//mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
 
 /*
 set( ) 	Write or replace data to a defined path, like messages/users/<username>
@@ -20,13 +20,13 @@ transaction( ) 	Use our transactions feature when working with complex data that
 
 export class UserRepository {
 
-mongoose : Mongoose.Mongoose;
+//mongoose : Mongoose.Mongoose ;
 
 constructor(){
     //var mongoose = require('mongoose').;
 
-    this.mongoose = new Mongoose.Mongoose(); 
-    this.mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
+   // this.mongoose = new Mongoose.Mongoose(); 
+    
 }
 
 

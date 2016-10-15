@@ -1,5 +1,6 @@
 "use strict";
 var mongoose = require('mongoose');
+//mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
 var Schema = mongoose.Schema;
 //Custom Validators: 
 var memberNameValidator = [
