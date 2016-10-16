@@ -11,11 +11,13 @@ transaction( ) 	Use our transactions feature when working with complex data that
                 could be corrupted by concurrent updates
 */
 var UserRepository = (function () {
-    //mongoose : Mongoose.Mongoose ;
     function UserRepository() {
-        //var mongoose = require('mongoose').;
-        // this.mongoose = new Mongoose.Mongoose(); 
     }
+    //mongoose : Mongoose.Mongoose ;
+    //constructor(){
+    //var mongoose = require('mongoose').;
+    // this.mongoose = new Mongoose.Mongoose(); 
+    //}
     UserRepository.prototype.createNewUser = function (user) {
         //We will obtain the form data from the request argument that is passed into our function
         //req.body => brings the form data along with it
@@ -28,16 +30,9 @@ var UserRepository = (function () {
             email: user.email,
             phone: user.phone
         });
+        console.log("Before await in createNewUser In repository");
         //entry.sa
-        entry.save(function (err) {
-            if (err) {
-                return "Sorry, there was an error saving the stand-up meeting note. " + err;
-            }
-            else {
-                return "User post has been created successfully";
-            }
-        });
-        return ""; //Never runs
+        return entry.save();
     };
     /*
     I returned mongoose docs as json in this way:
@@ -63,13 +58,9 @@ var UserRepository = (function () {
     */
     UserRepository.prototype.getAllUsers = function () {
         var query = User.find();
-        query.sort({ username: 'ascending' }) //ask it to be sorted on date in descending order
+        return query.sort({ username: 'desc' }) //ask it to be sorted on date in descending order
             .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
-            .exec(function (err, results) {
-            //res.json(results.);
-            return results;
-            //  res.render('index', {title: 'Standup - List', notes: results}); //This is how you send data to view
-        });
+            .exec();
     };
     return UserRepository;
 }());

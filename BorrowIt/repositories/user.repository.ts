@@ -22,16 +22,16 @@ export class UserRepository {
 
 //mongoose : Mongoose.Mongoose ;
 
-constructor(){
+//constructor(){
     //var mongoose = require('mongoose').;
 
    // this.mongoose = new Mongoose.Mongoose(); 
     
-}
+//}
 
 
 
-createNewUser(user: UserModel): string {
+ createNewUser(user: UserModel): any {
       //We will obtain the form data from the request argument that is passed into our function
     //req.body => brings the form data along with it
     var entry = new User({
@@ -43,18 +43,10 @@ createNewUser(user: UserModel): string {
         email:  user.email,
         phone: user.phone
     });  
-
+    console.log("Before await in createNewUser In repository");
     //entry.sa
-    entry.save(function(err){
-        if(err){
-            return "Sorry, there was an error saving the stand-up meeting note. " + err;
-        }
-        else{
-           return "User post has been created successfully";
-        }
-    }    
-    );
-  return ""; //Never runs
+    return  entry.save();
+   
 }
 
 /*
@@ -82,16 +74,9 @@ UserModel.find().lean().exec(function (err, users) {
 
 getAllUsers(){
  var query = User.find();
- query.sort({username: 'ascending'}) //ask it to be sorted on date in descending order
+ return query.sort({username: 'desc'}) //ask it to be sorted on date in descending order
       .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
-      .exec(function(err, results){
-
-
-          //res.json(results.);
-          return results;
-        //  res.render('index', {title: 'Standup - List', notes: results}); //This is how you send data to view
-      });
-    
+      .exec();    
 }
 
 
