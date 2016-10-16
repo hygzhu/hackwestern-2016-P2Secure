@@ -1,0 +1,339 @@
+/*
+Built-in Promises
+
+Mongoose async operations, like .save() and queries, return Promises/A+ conformant promises. This means that 
+you can do things like MyModel.findOne({}).then() and yield MyModel.findOne({}).exec() (if you're using co).
+
+For backwards compatibility, Mongoose 4 returns mpromise promises by default.
+
+
+    var gnr = new Band({
+      name: "Guns N' Roses",
+      members: ['Axl', 'Slash']
+    });
+
+    var promise = gnr.save();
+    assert.ok(promise instanceof require('mpromise'));
+
+    promise.then(function (doc) {
+      assert.equal(doc.name, "Guns N' Roses");
+    });
+  
+Queries are not promises
+
+Mongoose queries are not promises. However, they do have a .then() function for yield and 
+async/await. If you need a fully-fledged promise, use the .exec() function.
+
+
+    var query = Band.findOne({name: "Guns N' Roses"});
+    assert.ok(!(query instanceof require('mpromise')));
+
+    // A query is not a fully-fledged promise, but it does have a `.then()`.
+    query.then(function (doc) {
+      // use doc
+    });
+
+    // `.exec()` gives you a fully-fledged promise
+    var promise = query.exec();
+    assert.ok(promise instanceof require('mpromise'));
+
+    promise.then(function (doc) {
+      // use doc
+    });
+  
+Plugging in your own Promises Library
+
+New in Mongoose 4.1.0
+
+While mpromise is sufficient for basic use cases, advanced users may want to plug in their favorite 
+ES6-style promises library like bluebird, or just use native ES6 promises. Just set mongoose.Promise to 
+your favorite ES6-style promise constructor and mongoose will use it.
+
+Mongoose tests with ES6 native promises, bluebird, and q. Any promise library 
+that exports an ES6-style promise constructor should work in theory, but 
+theory often differs from practice. If you find a bug, open an issue on GitHub
+
+
+    var query = Band.findOne({name: "Guns N' Roses"});
+
+    // Use native promises
+    mongoose.Promise = global.Promise;
+    assert.equal(query.exec().constructor, global.Promise);
+
+    // Use bluebird
+    mongoose.Promise = require('bluebird');
+    assert.equal(query.exec().constructor, require('bluebird'));
+
+    // Use q. Note that you **must** use `require('q').Promise`.
+    mongoose.Promise = require('q').Promise;
+    assert.ok(query.exec() instanceof require('q').makePromise);
+  
+Promises for the MongoDB Driver
+
+The mongoose.Promise property sets the promises mongoose uses. However, 
+this does not affect the underlying MongoDB driver. If you use the underlying
+ driver, for instance Model.collection.db.insert(), you need to do a little 
+ extra work to change the underlying promises library. Note that the below 
+ code assumes mongoose >= 4.4.4.
+
+
+    var uri = 'mongodb://localhost:27017/mongoose_test';
+    // Use bluebird
+    var options = { promiseLibrary: require('bluebird') };
+    var db = mongoose.createConnection(uri, options);
+
+    Band = db.model('band-promises', { name: String });
+
+    db.on('open', function() {
+      assert.equal(Band.collection.findOne().constructor, require('bluebird'));
+    });
+  
+
+
+
+
+*/
+
+Working with promises and mongoose just became a whole lot easier with the 4.1 release, 
+which added the ability to specify alternative promise libraries. Prior to that, promise 
+support was limited to the mpromise way of using promises. For some folks, including myself, 
+this meant there wasn't a friendly .catch method available to the promise chain. In this post, 
+I'll quickly cover how to switch over to other supported promise libraries and show how using 
+promises can clean up your mongoose callbacks.
+
+Normally, when using mongoose, you just need to require it. In order to switch out the promise 
+provider, you'll also need to require the promise library and point mongoose.Promise to it. 
+In the following example, I set the promise library to bluebird:
+
+var mongoose = require('mongoose');
+// set Promise provider to bluebird
+mongoose.Promise = require('bluebird');
+Here's the example for using native promises or q:
+
+// q
+mongoose.Promise = require('q').Promise;
+// native promises
+mongoose.Promise = global.Promise;
+That's as simple and non-hacky as one could hope for. Next up, I'll show what typical 
+mongoose callbacks look like and how you can swap those out for promises. In these last 
+examples, I'll look up a user by id, update the user's name, and save it:
+
+// error first callback style
+User.findById('123', function(err, user) {
+  if (err) {
+    return console.log('error:', err);
+  }
+
+  user.name = 'Robert Paulson';
+
+  user.save(function(err) {
+    // yet another err object to deal with
+    if (err) {
+      return console.log('error:', err);
+    }
+    console.log('updated user: ' + user.name);
+    // do something with updated user
+  });
+});
+The above callback example shows the first level of nesting and 
+multiple error handlers. That's not too bad, but with more logic it can easily become 
+visually overwhelming. In the last example, I'll show what the same task looks like using promises. 
+We'll switch to using Model queries that return a promise via the .exec() function.
+
+var promise = User.findById('123').exec();
+
+promise.then(function(user) {
+  user.name = 'Robert Paulson';
+
+  return user.save(); // returns a promise
+})
+.then(function(user) {
+  console.log('updated user: ' + user.name);
+  // do something with updated user
+})
+.catch(function(err){
+  // just need one of these
+  console.log('error:', err);
+});
+Note that there was only one error handler for both of the promises, findById(id).exec() and user.save(). For me, 
+the benefit of using promises is really in the ability to read what's going on in the code and to consolidate 
+error handling into one place with the option to break that out if needed. If that interests you, give promises 
+in mongoose a try.
+
+MongoDB is one of the most popular document databases in the NodeJS world. 
+It constantly evolves and has huge community support. 
+As a result, developers created various Object Document Mapper (ODM) tools like
+ Mongoose, Mongolia, Waterline, etc. These ODM tools provide high
+  level abstractions and make our lives a lot easier while working with MongoDB.
+   In this blog post, we are going to discuss Mongoose. We assume that you
+    have basic knowledge about this tool; if not, you can go through the
+     "quick start guide" and detailed documentation at http://mongoosejs.com
+
+Here's a scenario: We have a student and a course and we want to enroll the student
+ into the course. But before enrolling the student, we need to make sure that there
+  are enough seats available in the course. If we follow the official Mongoose
+   documentation then our code should look like this:
+
+
+
+  var Student = require('./student.model');
+  var Course = rqurie('./course.model');
+
+  //Let's assume we are using Express framework for nodeJs
+  function enrollStudent(req, res, next) {
+
+  //First we need to make sure that student exists and load the user.
+  Student.findById(req.body.studentId, function(err, student){
+      if(err) return next(err);
+
+      //Now we need to load the course
+      Course.findById(req.body.courseId, function(err, course){
+        if(err) return next(err);
+
+        //Next we need to check if there are available seats in the course
+        if(course.isSeatAvailable()){
+          //Enroll student into the course and save the course
+          course.enrolledStudents.push(student.id);
+          course.save(function(err){
+            if(err) return next(err);
+            return res.json({message : 'Enrollment successful'}); 
+          });
+        } else {
+          //Call error handler
+          return next({message : 'No seats available'});
+        } 
+      }); 
+    }); 
+  }
+
+As you can see, even in this simple scenario our function is expanding horizontally because of
+ callbacks. More complicated scenarios will have more callbacks and eventually the code
+  becomes unreadable. One way to solve this problem is by using "promises." If you
+   are not familiar with Promises spec, you can learn more about it at http://promisesaplus.com.
+    In Mongoose 4.x, all queries have an exec() method that returns a
+     promise object. Model.save() method also returns a promise. Let's rewrite our
+      function using promises...
+
+  function enrollStudent(req, res, next) {
+    var student;
+
+    //Load the user
+    Student.findById(req.body.studentId).exec()
+
+    //Capture student and load the course 
+    .then(function(studentFromDb){
+      student = studentFromDb
+      return Course.findById(req.body.courseId).exec();
+    })
+
+    //Check if there are available seats in the course
+    .then(function(course){
+      if(course.isSeatAvailable()){
+        //Enroll student into the course
+        course.enrolledStudents.push(student.id);
+        return course;
+      } else {
+        //throw an error
+        throw new Error('No seats available');
+      }
+    })
+
+    //Save the course
+    .then(function(course){
+      return course.save();
+    })
+    
+    //Send the response back
+    .then(function(course){
+      return res.json({message : 'Enrollment successful'})
+    });
+
+    //Catch all errors and call the error handler;
+    .then(null, next);
+
+  }
+
+Promise chaining allows us to avoid the "callback hell," and the promise catch block eliminates
+ extraneous error checks. By comparing these two examples, you can see that using promises in
+  Mongoose will make your code a lot cleaner and more readable.
+
+  MongoDB is one of the most popular document databases in the NodeJS world. It constantly evolves and has huge community support. As a result, developers created various Object Document Mapper (ODM) tools like Mongoose, Mongolia, Waterline, etc. These ODM tools provide high level abstractions and make our lives a lot easier while working with MongoDB. In this blog post, we are going to discuss Mongoose. We assume that you have basic knowledge about this tool; if not, you can go through the "quick start guide" and detailed documentation at http://mongoosejs.com
+
+Here's a scenario: We have a student and a course and we want to enroll the student into the course. But before enrolling the student, we need to make sure that there are enough seats available in the course. If we follow the official Mongoose documentation then our code should look like this:
+
+
+
+  var Student = require('./student.model');
+  var Course = rqurie('./course.model');
+
+  //Let's assume we are using Express framework for nodeJs
+  function enrollStudent(req, res, next) {
+
+  //First we need to make sure that student exists and load the user.
+  Student.findById(req.body.studentId, function(err, student){
+      if(err) return next(err);
+
+      //Now we need to load the course
+      Course.findById(req.body.courseId, function(err, course){
+        if(err) return next(err);
+
+        //Next we need to check if there are available seats in the course
+        if(course.isSeatAvailable()){
+          //Enroll student into the course and save the course
+          course.enrolledStudents.push(student.id);
+          course.save(function(err){
+            if(err) return next(err);
+            return res.json({message : 'Enrollment successful'}); 
+          });
+        } else {
+          //Call error handler
+          return next({message : 'No seats available'});
+        } 
+      }); 
+    }); 
+  }
+
+As you can see, even in this simple scenario our function is expanding horizontally because of callbacks. More complicated scenarios will have more callbacks and eventually the code becomes unreadable. One way to solve this problem is by using "promises." If you are not familiar with Promises spec, you can learn more about it at http://promisesaplus.com. In Mongoose 4.x, all queries have an exec() method that returns a promise object. Model.save() method also returns a promise. Let's rewrite our function using promises...
+
+  function enrollStudent(req, res, next) {
+    var student;
+
+    //Load the user
+    Student.findById(req.body.studentId).exec()
+
+    //Capture student and load the course 
+    .then(function(studentFromDb){
+      student = studentFromDb
+      return Course.findById(req.body.courseId).exec();
+    })
+
+    //Check if there are available seats in the course
+    .then(function(course){
+      if(course.isSeatAvailable()){
+        //Enroll student into the course
+        course.enrolledStudents.push(student.id);
+        return course;
+      } else {
+        //throw an error
+        throw new Error('No seats available');
+      }
+    })
+
+    //Save the course
+    .then(function(course){
+      return course.save();
+    })
+    
+    //Send the response back
+    .then(function(course){
+      return res.json({message : 'Enrollment successful'})
+    });
+
+    //Catch all errors and call the error handler;
+    .then(null, next);
+
+  }
+
+Promise chaining allows us to avoid the "callback hell," and the promise catch 
+block eliminates extraneous error checks. By comparing these two examples,
+ you can see that using promises in Mongoose will make your code a lot cleaner and more readable.
