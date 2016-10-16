@@ -1,23 +1,19 @@
 # P2Secure
 
+P2Secure allows users to lend their items and borrow items from others locally. Lenders will get an incentive to lend (get a rental fee from the borrower) and the borrower will be able to get items when they need it instead of having to pay a one-time large cost for purchasing the item. This is a great advantage for the borrower as they would be able to borrow a variety of items from tools and ladders to textbooks and bikes.
 
-## Todo
+## Secure
 
-Ethereum 
+People who lend will recieve a collateral in exchange for the item they are lending. P2Secure acts as an intermediary which secures the borrowing and ensures credibility.
 
-Bitcoin
+We created this program to ensure that the lenders are credible and do not want to "scam" borrowers and also protecting the lenders if the borrower damages the item. 
 
-Front End
+## Local
 
-Back End
+The lenders and borrowers exchange items and contact info locally. The web app will show what items are available for borrowing. 
 
-SSL - https://letsencrypt.org/
+## Guaranteed Returns
 
-=======
-
-Anyone can borrow anything from anyone else, bitcoin is collaterall. 
-Borrower gives full value of item initially, and gets back full value - borrower fee, when he returns the item.
+Since the lender will hold a collateral, the borrower already has an incentive to return the item. The borrower would obviously want his deposit back. In addition, we use a ratings system to make sure only the fair lenders and borrowers are able to use the webapp.  
 
 
-Arthur is awesome
->>>>>>> 2aa940647e4a6d126e6387ca24f192acee6191bc
