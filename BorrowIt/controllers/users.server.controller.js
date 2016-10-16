@@ -12,7 +12,7 @@ var UserController = (function () {
         this.BlockchainInterface = new web33_1.BlockchainInterface();
     }
     UserController.prototype.createUser = function (req, res) {
-        var accountNumber = this.BlockchainInterface.getNewAccountNumber();
+        var accountNumber = ""; //= this.BlockchainInterface.getNewAccountNumber();
         var userModel = new user_server_model_1.UserModel(req.body.username, req.body.password, req.body.firstname, req.body.lastname, req.body.middlename, req.body.email, req.body.phone, accountNumber);
         console.log("Before await in create user");
         var promise = this.UserRepo.createNewUser(userModel);
@@ -45,20 +45,47 @@ var UserController = (function () {
         });
     };
     UserController.prototype.login = function (req, res) {
-        var inputtedPassword = req.body.password;
+        // this.UserRepo.getUserByUsername(req.body.username);
         var promise = this.UserRepo.getUserByUsername(req.body.username);
+        var thisObj = this;
         promise.then(function (user) {
-            var token = this.Tokenize.createToken(user);
-            var actualPassword = this.DataEncrypt.decrypt(user.password);
-            if (actualPassword === inputtedPassword) {
+            var token = thisObj.Tokenize.createToken(user);
+            console.log(token);
+            var actualPassword = thisObj.DataEncrypt.decrypt(user.password);
+            console.log(actualPassword);
+            if (actualPassword === req.body.password) {
                 res.json({ "success": true, "token": user });
             }
             else {
                 res.json({ "success": false, "token": 0 });
             }
         }).catch(function (err) {
+            console.log("HIt error");
             res.json({ error: err });
         });
+        /*
+          var inputtedPassword = req.body.password;
+          var promise = this.UserRepo.getUserByUsername(req.body.username);
+         console.log(promise);
+ 
+          promise.then(
+              
+              function(user){
+                  var token = this.Tokenize.createToken(user);
+                  console.log(token);
+                  var actualPassword: string = this.DataEncrypt.decrypt(user.password);
+                  console.log(actualPassword);
+ 
+                  if(actualPassword === inputtedPassword){
+                      res.json({ "success" : true, "token" : user });
+                  } else {
+                      res.json({"success" : false, "token" : 0 });
+                  }
+              }).catch(function(err){
+                  console.log("HIt error");
+                  res.json({ error: err });
+              });
+              */
     };
     return UserController;
 }());

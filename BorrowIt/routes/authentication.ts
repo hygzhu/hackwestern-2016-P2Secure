@@ -19,7 +19,7 @@ Sample JSon
 }
 
 */
-router.post('/login', function(req,res){
+router.post('/', function(req,res){
   userController.login(req,res);
 });
 

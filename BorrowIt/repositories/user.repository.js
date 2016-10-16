@@ -20,7 +20,7 @@ var UserRepository = (function () {
     UserRepository.prototype.createNewUser = function (user) {
         //We will obtain the form data from the request argument that is passed into our function
         //req.body => brings the form data along with it
-        user.password = this.dataEncrypt.decrypt(user.password);
+        user.password = this.dataEncrypt.encrypt(user.password);
         var entry = new User({
             username: user.username,
             password: user.password,
@@ -62,8 +62,19 @@ var UserRepository = (function () {
             .exec();
     };
     UserRepository.prototype.getUserByUsername = function (username) {
-        var query = User.findOne({ 'username': username });
-        return query.exec();
+        function decrypt(password) { return this.dataEncrypt.decrypt(password); }
+        var query = User.findOne({ "username": username });
+        // var fook = this;
+        return query.exec(); /*.then(function(item){
+         
+            console.log(item.password);
+            
+            console.log(fook);
+            fook.password = item.password;
+            console.log(fook.password);
+            console.log(fook.dataEncrypt.decrypt(fook.password));
+            console.log("end");
+        });*/
     };
     return UserRepository;
 }());

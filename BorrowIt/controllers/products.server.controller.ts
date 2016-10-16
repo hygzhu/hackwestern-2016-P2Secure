@@ -14,7 +14,8 @@ export class ProductController {
 
      createProduct(req: express.Request, res: express.Response) { //create function we will use to save form data to mongodb with
 
-        var ProductModel: ProductModel = new ProductModel(req.body.productName,
+        var productModel: ProductModel = new ProductModel(
+            req.body.productName,
             req.body.collateralAmount,
             req.body.borrowingFeeAmount,
             req.body.dueDate,
@@ -22,7 +23,7 @@ export class ProductController {
             req.body.lenderWallet)
             console.log("Before await in create productModel");
         
-        var promise =  this.productRepo.createNewProduct(productModel);
+        var promise =  this.ProductRepo.createNewProduct(productModel);
         console.log(promise);
 
         //promise.then()
@@ -50,7 +51,7 @@ exports.getPostsOfUser = function(req:express.Request, res: express.Response){
 
 
      getProducts(req: express.Request, res: express.Response) {
-         var promise = this.UserRepo.getAllProducts();
+         var promise = this.ProductRepo.getAllProducts();
          promise.then(
              function (results) {
                  res.json(results);

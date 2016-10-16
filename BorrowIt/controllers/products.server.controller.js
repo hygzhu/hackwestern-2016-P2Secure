@@ -1,13 +1,14 @@
 "use strict";
+var product_server_model_1 = require('../models/product.server.model');
 var product_repository_1 = require('../repositories/product.repository');
 var ProductController = (function () {
     function ProductController() {
         this.ProductRepo = new product_repository_1.ProductRepository();
     }
     ProductController.prototype.createProduct = function (req, res) {
-        var ProductModel = new ProductModel(req.body.productName, req.body.collateralAmount, req.body.borrowingFeeAmount, req.body.dueDate, req.body.borrowWallet, req.body.lenderWallet);
+        var productModel = new product_server_model_1.ProductModel(req.body.productName, req.body.collateralAmount, req.body.borrowingFeeAmount, req.body.dueDate, req.body.borrowWallet, req.body.lenderWallet);
         console.log("Before await in create productModel");
-        var promise = this.productRepo.createNewProduct(productModel);
+        var promise = this.ProductRepo.createNewProduct(productModel);
         console.log(promise);
         //promise.then()
         promise.then(function (info) {
@@ -30,7 +31,7 @@ var ProductController = (function () {
     });
     }*/
     ProductController.prototype.getProducts = function (req, res) {
-        var promise = this.UserRepo.getAllProducts();
+        var promise = this.ProductRepo.getAllProducts();
         promise.then(function (results) {
             res.json(results);
         }).catch(function (err) {

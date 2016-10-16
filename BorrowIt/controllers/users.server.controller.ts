@@ -22,7 +22,7 @@ export class UserController {
 
      createUser(req: express.Request, res: express.Response) { //create function we will use to save form data to mongodb with
 
-        var accountNumber: string = this.BlockchainInterface.getNewAccountNumber();
+        var accountNumber: string = "";//= this.BlockchainInterface.getNewAccountNumber();
 
         var userModel: UserModel = new UserModel(req.body.username,
             req.body.password,
@@ -74,26 +74,51 @@ exports.getPostsOfUser = function(req:express.Request, res: express.Response){
 
 
      login(req: express.Request, res: express.Response){
-         
+       
+     // this.UserRepo.getUserByUsername(req.body.username);
+      var promise = this.UserRepo.getUserByUsername(req.body.username);
+      var thisObj = this;
+       promise.then(
+             
+             function(user){
+                 var token = thisObj.Tokenize.createToken(user);
+                 console.log(token);
+                 var actualPassword: string = thisObj.DataEncrypt.decrypt(user.password);
+                 console.log(actualPassword);
+
+                 if(actualPassword === req.body.password){
+                     res.json({ "success" : true, "token" : user });
+                  } else {
+                     res.json({"success" : false, "token" : 0 });
+                  }
+             }).catch(function(err){
+                 console.log("HIt error");
+                 res.json({ error: err });
+             });
+       
+       /*  
          var inputtedPassword = req.body.password;
          var promise = this.UserRepo.getUserByUsername(req.body.username);
-          
+        console.log(promise);
 
          promise.then(
              
              function(user){
                  var token = this.Tokenize.createToken(user);
+                 console.log(token);
                  var actualPassword: string = this.DataEncrypt.decrypt(user.password);
+                 console.log(actualPassword);
 
                  if(actualPassword === inputtedPassword){
                      res.json({ "success" : true, "token" : user });
                  } else {
                      res.json({"success" : false, "token" : 0 });
                  }
-
              }).catch(function(err){
+                 console.log("HIt error");
                  res.json({ error: err });
              });
+             */
      }
 
 
