@@ -25,10 +25,7 @@ Sample JSon
 }
 
 */
-router.post('/create', function(req,res){
-  console.log('in router');
-  userController.createUser(req,res);
-});
+
 
 router.get('/all',function(req,res){
   return userController.getUsers(req,res);

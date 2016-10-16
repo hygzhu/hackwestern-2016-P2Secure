@@ -12,7 +12,7 @@ var collatlending = collatlendingContract.new(
             gas: 4700000
           }, function (e, contract){
            if (typeof contract.address !== 'undefined') {
-                      console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
+                   //   console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
                  }
              })
 var addr;
@@ -20,38 +20,39 @@ var myContract = collatlendingContract.new({from: web3.eth.accounts[0], gas: 100
     if(!e) {
 
           if(!contract.address) {
-                  console.log("Contract transaction send: TransactionHash: " + contract.transactionHash + " waiting to be mined...");
+                 // console.log("Contract transaction send: TransactionHash: " + contract.transactionHash + " waiting to be mined...");
 
                 } else {
                   addr = contract.address;
-                  console.log("Contract mined! Address: " + contract.address);
-                  console.log(contract);
+                  //console.log("Contract mined! Address: " + contract.address);
+                  //console.log(contract);
                 }
-
         }   
 })
 
 
 
-int count = 0;
-export class Blockchain-Interface{
-  getNewAccountNumber(){
+var count: number = 0;
+export class BlockchainInterface {
+
+  getNewAccountNumber() {
     count+=1;
-    myContract.setBalance(web3.eth.accounts[count-1], 1000);
-    return(web3.eth.accouts[count-1]);
+    console.log(myContract);
+    console.log(web3.eth.accounts[count]);
+    myContract.setBalance(web3.eth.accounts[count], 1000);
+    return(web3.eth.accounts[count]);
   }
 
-  settleContract(text: string){
+  settleContract(text: string) {
     myContract.settle();
   }
 
-  initContract(buyerWallet: string, sellerWallet: string, collatAmt: int, lendin    gAmt: int){
-   myContract.initLending(sellerWallet, collatAmt, lending);
+  initContract(buyerWallet: string, sellerWallet: string, collatAmt: number, lendingFee: number){
+   myContract.initLending(sellerWallet, collatAmt, lendingFee);
   }
 
   getAmountInWallet(wallet: string){
     return myContract.getBalance(wallet);
   }
-
 
 }

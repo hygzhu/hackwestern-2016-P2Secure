@@ -1,6 +1,6 @@
 
 var crypto: Crypto = require('crypto');
-var config = require('config.js');
+var config = require('../config.js');
 
 export class DataEncrypt {
 

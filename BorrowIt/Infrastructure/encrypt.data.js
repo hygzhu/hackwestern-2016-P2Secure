@@ -1,6 +1,6 @@
 "use strict";
 var crypto = require('crypto');
-var config = require('config.js');
+var config = require('../config.js');
 var DataEncrypt = (function () {
     function DataEncrypt() {
     }

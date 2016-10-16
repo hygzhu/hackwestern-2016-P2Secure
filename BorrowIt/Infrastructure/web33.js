@@ -9,48 +9,38 @@ var collatlending = collatlendingContract.new({
     gas: 4700000
 }, function (e, contract) {
     if (typeof contract.address !== 'undefined') {
-        console.log('Contract mined! address: ' + contract.address + ' transactionHash: ' + contract.transactionHash);
     }
 });
 var addr;
 var myContract = collatlendingContract.new({ from: web3.eth.accounts[0], gas: 1000000 }, function (e, contract) {
     if (!e) {
         if (!contract.address) {
-            console.log("Contract transaction send: TransactionHash: " + contract.transactionHash + " waiting to be mined...");
         }
         else {
             addr = contract.address;
-            console.log("Contract mined! Address: " + contract.address);
-            console.log(contract);
         }
     }
 });
-int;
-count = 0;
-var Blockchain = (function () {
-    function Blockchain() {
+var count = 0;
+var BlockchainInterface = (function () {
+    function BlockchainInterface() {
     }
-    return Blockchain;
-}());
-exports.Blockchain = Blockchain;
--Interface;
-{
-    getNewAccountNumber();
-    {
+    BlockchainInterface.prototype.getNewAccountNumber = function () {
         count += 1;
-        myContract.setBalance(web3.eth.accounts[count - 1], 1000);
-        return (web3.eth.accouts[count - 1]);
-    }
-    settleContract(text, string);
-    {
+        console.log(myContract);
+        console.log(web3.eth.accounts[count]);
+        myContract.setBalance(web3.eth.accounts[count], 1000);
+        return (web3.eth.accounts[count]);
+    };
+    BlockchainInterface.prototype.settleContract = function (text) {
         myContract.settle();
-    }
-    initContract(buyerWallet, string, sellerWallet, string, collatAmt, int, lendin, gAmt, int);
-    {
-        myContract.initLending(sellerWallet, collatAmt, lending);
-    }
-    getAmountInWallet(wallet, string);
-    {
+    };
+    BlockchainInterface.prototype.initContract = function (buyerWallet, sellerWallet, collatAmt, lendingFee) {
+        myContract.initLending(sellerWallet, collatAmt, lendingFee);
+    };
+    BlockchainInterface.prototype.getAmountInWallet = function (wallet) {
         return myContract.getBalance(wallet);
-    }
-}
+    };
+    return BlockchainInterface;
+}());
+exports.BlockchainInterface = BlockchainInterface;

@@ -20,7 +20,7 @@ var productSchema = new Schema({
         validate: productNameValidator
     },
     collateralAmount: {
-        type: int,
+        type: Number,
         required: true, 
     },
     borrowingFeeAmount: {

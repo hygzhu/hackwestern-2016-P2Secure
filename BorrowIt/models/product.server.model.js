@@ -1,6 +1,6 @@
 "use strict";
-var UserModel = (function () {
-    function UserModel(productName, collateralAmount, borrowingFeeAmount, dueDate, borrowerWallet, lenderWallet) {
+var ProductModel = (function () {
+    function ProductModel(productName, collateralAmount, borrowingFeeAmount, dueDate, borrowerWallet, lenderWallet) {
         this.productName = productName;
         this.collateralAmount = collateralAmount;
         this.borrowingFeeAmount = borrowingFeeAmount;
@@ -8,6 +8,6 @@ var UserModel = (function () {
         this.borrowerWallet = borrowerWallet;
         this.lenderWallet = lenderWallet;
     }
-    return UserModel;
+    return ProductModel;
 }());
-exports.UserModel = UserModel;
+exports.ProductModel = ProductModel;

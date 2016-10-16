@@ -7,7 +7,10 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var authentication = require('./routes/authentication');
 var config = require('./config.js');
+var jwt = require('jsonwebtoken')
+
 
 var app = express();
 
@@ -27,6 +30,38 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/login', authentication);
+
+
+app.use(function(req, res, next) {
+
+	
+	var token = req.body.token || req.param('token') || req.headers['token'];
+
+	if (token) {
+
+		// verifies secret and checks exp
+		jwt.verify(token, app.get('superSecret'), function(err, decoded) {			
+			if (err) {
+				return res.json({ success: false, message: 'Failed to authenticate token.' });		
+			} else {
+				// if everything is good, save to request for use in other routes
+				req.decoded = decoded;	
+				next();
+			}
+		});
+
+	} else {
+
+		return res.status(403).send({ 
+			success: false, 
+			message: 'No token provided.'
+		});
+		
+	}
+	
+});
+
 app.use('/users', users);
 
 // catch 404 and forward to error handler

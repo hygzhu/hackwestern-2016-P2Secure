@@ -1,6 +1,6 @@
 
 
-export class UserModel {
+export class ProductModel {
 
         productName: string;
         collateralAmount: number;

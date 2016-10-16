@@ -1,6 +1,6 @@
 "use strict";
 var UserModel = (function () {
-    function UserModel(username, password, firstname, lastname, middlename, email, phone) {
+    function UserModel(username, password, firstname, lastname, middlename, email, phone, accountNumber) {
         this.username = username;
         this.password = password;
         this.firstname = firstname;
@@ -8,6 +8,7 @@ var UserModel = (function () {
         this.middlename = middlename;
         this.email = email;
         this.phone = phone;
+        this.accountNumber = accountNumber;
     }
     return UserModel;
 }());

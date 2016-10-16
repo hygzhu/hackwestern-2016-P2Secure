@@ -45,6 +45,8 @@ var userSchema = new Schema({
     }, phone: {
         type: String,
         required: true
+    }, accountNumber: {
+        type: String
     }
 });
 // Expose (export) the model now...

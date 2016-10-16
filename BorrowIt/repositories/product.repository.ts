@@ -18,7 +18,7 @@ transaction( ) 	Use our transactions feature when working with complex data that
                 could be corrupted by concurrent updates
 */
 
-export class UserRepository {
+export class ProductRepository {
 
 //mongoose : Mongoose.Mongoose ;
 
@@ -31,7 +31,7 @@ export class UserRepository {
 
 
 
-createNewProduct(user: ProductModel): any {
+createNewProduct(product: ProductModel): any {
       //We will obtain the form data from the request argument that is passed into our function
     //req.body => brings the form data along with it
     var entry = new Product({
@@ -72,7 +72,7 @@ UserModel.find().lean().exec(function (err, users) {
 */
 
 getAllProducts(){
- var query = products.find();
+ var query = Product.find();
  return query.sort({productName: 'desc'}) //ask it to be sorted on date in descending order
       .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
       .exec();    

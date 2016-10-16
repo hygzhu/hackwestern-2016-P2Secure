@@ -1,4 +1,5 @@
 "use strict";
+var encrypt_data_1 = require('../Infrastructure/encrypt.data');
 var mongoose = require('mongoose');
 var User = require('../models/user.database.model');
 //mongoose.connect('mongodb://harman666666:123456@ds061454.mlab.com:61454/borrowit'); 
@@ -12,15 +13,14 @@ transaction( ) 	Use our transactions feature when working with complex data that
 */
 var UserRepository = (function () {
     function UserRepository() {
+        //var mongoose = require('mongoose').;
+        // this.mongoose = new Mongoose.Mongoose(); 
+        this.dataEncrypt = new encrypt_data_1.DataEncrypt();
     }
-    //mongoose : Mongoose.Mongoose ;
-    //constructor(){
-    //var mongoose = require('mongoose').;
-    // this.mongoose = new Mongoose.Mongoose(); 
-    //}
     UserRepository.prototype.createNewUser = function (user) {
         //We will obtain the form data from the request argument that is passed into our function
         //req.body => brings the form data along with it
+        user.password = this.dataEncrypt.decrypt(user.password);
         var entry = new User({
             username: user.username,
             password: user.password,
@@ -28,10 +28,9 @@ var UserRepository = (function () {
             lastname: user.lastname,
             middlename: user.middlename,
             email: user.email,
-            phone: user.phone
+            phone: user.phone,
+            accountNumber: user.accountNumber
         });
-        console.log("Before await in createNewUser In repository");
-        //entry.sa
         return entry.save();
     };
     /*
@@ -61,6 +60,10 @@ var UserRepository = (function () {
         return query.sort({ username: 'desc' }) //ask it to be sorted on date in descending order
             .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
             .exec();
+    };
+    UserRepository.prototype.getUserByUsername = function (username) {
+        var query = User.findOne({ 'username': username });
+        return query.exec();
     };
     return UserRepository;
 }());

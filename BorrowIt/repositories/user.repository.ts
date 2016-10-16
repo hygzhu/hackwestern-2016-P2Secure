@@ -2,7 +2,7 @@ import * as Mongoose from 'mongoose';
 import * as express from 'express';
 import * as EventEmitter from 'events';
 import { UserModel } from '../models/user.server.model';
-
+import { DataEncrypt } from '../Infrastructure/encrypt.data'
 
 var mongoose = require('mongoose');
 var User: Mongoose._mongoose.IModelConstructor<{}> & EventEmitter.EventEmitter = require('../models/user.database.model');
@@ -20,33 +20,36 @@ transaction( ) 	Use our transactions feature when working with complex data that
 
 export class UserRepository {
 
-//mongoose : Mongoose.Mongoose ;
+dataEncrypt : DataEncrypt;
 
-//constructor(){
+constructor(){
     //var mongoose = require('mongoose').;
 
    // this.mongoose = new Mongoose.Mongoose(); 
-    
-//}
+   this.dataEncrypt = new DataEncrypt();
+}
 
 
 
  createNewUser(user: UserModel): any {
       //We will obtain the form data from the request argument that is passed into our function
     //req.body => brings the form data along with it
+    
+    user.password = this.dataEncrypt.decrypt(user.password);
+    
+    
     var entry = new User({
         username : user.username,
-        password: user.password,  //HASH THE PASSWORD IN THE DB
+        password: user.password,  //HASHED PASSWORD IN THE DB
         firstname: user.firstname,
         lastname: user.lastname,
         middlename: user.middlename,
         email:  user.email,
-        phone: user.phone
+        phone: user.phone,
+        accountNumber: user.accountNumber
     });  
-    console.log("Before await in createNewUser In repository");
-    //entry.sa
-    return  entry.save();
-   
+
+    return  entry.save();  
 }
 
 /*
@@ -77,6 +80,13 @@ getAllUsers(){
  return query.sort({username: 'desc'}) //ask it to be sorted on date in descending order
       .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
       .exec();    
+}
+
+getUserByUsername(username: string){
+
+    var query = User.findOne({ 'username' : username });
+    return query.exec();
+
 }
 
 

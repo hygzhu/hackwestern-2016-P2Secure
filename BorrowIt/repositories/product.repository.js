@@ -10,15 +10,15 @@ push( ) 	Add to a list of data in the database. Every time you call push()
 transaction( ) 	Use our transactions feature when working with complex data that
                 could be corrupted by concurrent updates
 */
-var UserRepository = (function () {
-    function UserRepository() {
+var ProductRepository = (function () {
+    function ProductRepository() {
     }
     //mongoose : Mongoose.Mongoose ;
     //constructor(){
     //var mongoose = require('mongoose').;
     // this.mongoose = new Mongoose.Mongoose(); 
     //}
-    UserRepository.prototype.createNewProduct = function (user) {
+    ProductRepository.prototype.createNewProduct = function (product) {
         //We will obtain the form data from the request argument that is passed into our function
         //req.body => brings the form data along with it
         var entry = new Product({
@@ -55,12 +55,12 @@ var UserRepository = (function () {
     
     
     */
-    UserRepository.prototype.getAllProducts = function () {
-        var query = products.find();
+    ProductRepository.prototype.getAllProducts = function () {
+        var query = Product.find();
         return query.sort({ productName: 'desc' }) //ask it to be sorted on date in descending order
             .limit(12) //Specifies maximum number of results query will return and cannot be used with distinct 
             .exec();
     };
-    return UserRepository;
+    return ProductRepository;
 }());
-exports.UserRepository = UserRepository;
+exports.ProductRepository = ProductRepository;
