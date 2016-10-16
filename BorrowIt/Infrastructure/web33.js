@@ -34,22 +34,24 @@ var myContract = collatlendingContract.new({from: web3.eth.accounts[0], gas: 100
 
 console.log(web3.eth.accounts[0])
 
+int count = 0;
 export class Blockchain-Interface{
-  getLender(text: string){
-  
-  
+  getNewAccountNumber(){
+    count+=1;
+    myContract.setBalance(web3.eth.accounts[count-1], 1000);
+    return(web3.eth.accouts[count-1]);
   }
 
-  settleContract(){
-  
+  settleContract(text: string){
+    myContract.settle();
   }
 
-  initContract(text: buyerWaller, text: sellerWallet, int collatAmt, int lendin    gAmt){
-  
+  initContract(buyerWallet: string, sellerWallet: string, collatAmt: int, lendin    gAmt: int){
+   myContract.initLending(sellerWallet, collatAmt, lending);
   }
 
-  getAmountInWallet(text: wallet){
-  
+  getAmountInWallet(wallet: string){
+    return myContract.getBalance(wallet);
   }
 
 
