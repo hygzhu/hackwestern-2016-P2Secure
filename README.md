@@ -16,4 +16,4 @@ The lenders and borrowers exchange items and contact info locally. The web app w
 
 Since the lender will hold a collateral, the borrower already has an incentive to return the item. The borrower would obviously want his deposit back. In addition, we use a ratings system to make sure only the fair lenders and borrowers are able to use the webapp.  
 
-
+test commit
