@@ -1,6 +1,6 @@
 # P2Secure
 
-UPDATE: We won the prize for best use of BlockChain in our hack! YAY!
+#### UPDATE: We won the prize for best use of BlockChain in our hack! YAY!
 
 P2Secure allows users to lend their items and borrow items from others locally. Lenders will get an incentive to lend (get a rental fee from the borrower) and the borrower will be able to get items when they need it instead of having to pay a one-time large cost for purchasing the item. This is a great advantage for the borrower as they would be able to borrow a variety of items from tools and ladders to textbooks and bikes.
 
